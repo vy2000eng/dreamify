@@ -1,0 +1,6 @@
+@dreamify_HostAddress = http://localhost:5064
+
+GET {{dreamify_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
