@@ -26,14 +26,17 @@ public class AuthTokenProcessor:IAuthTokenProcessor
 
     public (string jwtToken, DateTime expiresAtUtc) GenerateJwtToken(User user)
     {
+        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
         var credential = new SigningCredentials  (signingKey, SecurityAlgorithms.HmacSha256);
         var claims     = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub           , user.Id.ToString()       ),
-            new Claim(JwtRegisteredClaimNames.Jti           , Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Email         , user.Email               ),
-            new Claim(ClaimTypes             .NameIdentifier, user.ToString()          )
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Only use ID here
+            new Claim(ClaimTypes.Name, user.Email), // Use email as name
+            new Claim(ClaimTypes.Email, user.Email)
         };
 
         var expires = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpirationTimeInMinutes);
