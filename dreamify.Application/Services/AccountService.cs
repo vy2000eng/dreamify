@@ -47,7 +47,8 @@ public class AccountService:IAccountService
     
         user.RefreshToken = refreshTokenValue;
         user.RefreshTokenExpiry = refreshTokenExpirationDateInUtc;
-        var expiresIn = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresInSeconds = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresIn = expiresInSeconds / 60;
 
         return new LoginResponse
         {
@@ -75,7 +76,8 @@ public class AccountService:IAccountService
         user.RefreshTokenExpiry = refreshTokenExpirationDateInUtc;
         
         await _userManager.UpdateAsync(user);
-        var expiresIn = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresInSeconds = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresIn = expiresInSeconds / 60;
 
         
         return new LoginResponse
@@ -110,7 +112,8 @@ public class AccountService:IAccountService
         user.RefreshTokenExpiry = refreshTokenExpirationDateInUtc;
         
         await _userManager.UpdateAsync(user);
-        var expiresIn = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresInSeconds = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+        var expiresIn = expiresInSeconds / 60;
 
         
         return new LoginResponse
