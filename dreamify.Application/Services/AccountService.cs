@@ -30,7 +30,7 @@ public class AccountService:IAccountService
             throw new UserAlreadyExistsException(email: registerRequest.Email);
         }
         
-        var user = User.Create(registerRequest.FirstName,registerRequest.LastName, registerRequest.Email);
+        var user = User.Create(registerRequest.Email);
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, registerRequest.Password);
 
         var result = await  _userManager.CreateAsync(user);

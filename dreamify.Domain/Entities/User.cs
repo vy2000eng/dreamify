@@ -19,12 +19,12 @@ public class User:IdentityUser<Guid>
     
     
 
-    public static User Create(string email, string username ,string? refreshToken = null)
+    public static User Create(string email,string? refreshToken = null)
     {
         return new User
         {
             Email                         = email,
-            UserName                      = username,
+            UserName                      = email,
             CreatedOn                     = DateTime.UtcNow,
             IsSubscribed                  = false,
             DoesHaveRecordings            = false,
