@@ -31,9 +31,9 @@ public class AccountService:IAccountService
         }
         
         var user = User.Create(registerRequest.Email);
-        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, registerRequest.Password);
 
-        var result = await  _userManager.CreateAsync(user);
+        var result = await _userManager.CreateAsync(user, registerRequest.Password);
+
 
         if (!result.Succeeded)
         {

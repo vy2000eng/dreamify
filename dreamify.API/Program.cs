@@ -36,9 +36,10 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
     opt.Password.RequireUppercase = true;
     opt.Password.RequiredLength = 8;
     opt.User.RequireUniqueEmail = true;
+    opt.User.AllowedUserNameCharacters = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 
 }).AddEntityFrameworkStores<ApplicationDbContext>();
-//.AddDefaultTokenProviders(); 
 
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
