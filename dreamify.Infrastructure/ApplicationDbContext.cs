@@ -23,7 +23,7 @@ public class ApplicationDbContext:IdentityDbContext<User, IdentityRole<Guid>, Gu
            // .Property(u => u.UserName).HasMaxLength(256);
 
            builder.Entity<User>()
-               .HasIndex(u => u.Email)
+               .HasIndex(u => u.UserName)
                .IsUnique();
 
 

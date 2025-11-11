@@ -230,6 +230,9 @@ namespace dreamify.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
