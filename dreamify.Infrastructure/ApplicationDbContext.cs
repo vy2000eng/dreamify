@@ -18,12 +18,16 @@ public class ApplicationDbContext:IdentityDbContext<User, IdentityRole<Guid>, Gu
     {
         base.OnModelCreating(builder);
         builder.Entity<User>()
-            .Property(u => u.FirstName).HasMaxLength(256);
-        
-        builder.Entity<User>()
-            .Property(u => u.LastName).HasMaxLength(256);
-        
-        
+            .HasIndex(u => u.Email)
+            .IsUnique();
+           // .Property(u => u.UserName).HasMaxLength(256);
+
+           builder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
+
+
+
 
     }
     
