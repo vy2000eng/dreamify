@@ -1,6 +1,9 @@
+using System.Security.Claims;
 using dreamify.Application.Abstracts;
 using dreamify.Domain.Entities;
 using dreamify.Domain.Requests;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
@@ -39,6 +42,19 @@ public class AccountController:ControllerBase
 
         return Results.Ok(refreshResponse);
     }
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("userInfo")]
+    public async Task<IResult> GetUserInfo()
+    {
+        
+        var refreshResponse = await _accountService.GetUserInfoAsync(User);
+
+        return Results.Ok(refreshResponse);
+    }
+    
+    
+    
     
     
     

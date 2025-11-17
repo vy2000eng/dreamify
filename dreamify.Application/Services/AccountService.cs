@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using dreamify.Application.Abstracts;
 using dreamify.Domain.Entities;
 using dreamify.Domain.Exceptions;
 using dreamify.Domain.Requests;
 using dreamify.Domain.Response;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace dreamify.Application.Services;
@@ -125,5 +127,43 @@ public class AccountService:IAccountService
         
         
         
+    }
+
+
+
+    public async Task<UserInfoResponse> GetUserInfoAsync(ClaimsPrincipal claimsPrincipal)
+    {
+        var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                     ?? claimsPrincipal.FindFirst("sub")?.Value;
+    
+        if (string.IsNullOrEmpty(userId))
+        {
+            return null;
+        }
+    
+        // Fetch the full user from your database
+        var user = await _userManager.FindByIdAsync(userId);
+    
+        if (user == null)
+        {
+            return null;
+        }
+    
+        // Create response object
+        return new UserInfoResponse
+        {
+            Email = user.Email,
+            UserName = user.UserName,
+            CreatedOn = user.CreatedOn,
+            IsSubscribed = user.IsSubscribed,
+        };
+    
+
+
+        
+
+        
+
+
     }
 }
