@@ -6,10 +6,10 @@ namespace dreamify.Domain.Response;
 public class UserInfoResponse
 {
     [JsonPropertyName("Email")]
-    public string Email        {get;set;}
+    public string Email        {get;set;} = string.Empty;
     
     [JsonPropertyName("UserName")]
-    public string UserName     {get;set;}
+    public string UserName     {get;set;} = string.Empty;
     
     [JsonPropertyName("createdOn ")]
     public DateTime CreatedOn  {get;set;}

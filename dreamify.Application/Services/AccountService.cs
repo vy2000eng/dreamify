@@ -4,7 +4,6 @@ using dreamify.Domain.Entities;
 using dreamify.Domain.Exceptions;
 using dreamify.Domain.Requests;
 using dreamify.Domain.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace dreamify.Application.Services;
@@ -157,13 +156,6 @@ public class AccountService:IAccountService
             CreatedOn = user.CreatedOn,
             IsSubscribed = user.IsSubscribed,
         };
-    
-
-
-        
-
-        
-
 
     }
 }

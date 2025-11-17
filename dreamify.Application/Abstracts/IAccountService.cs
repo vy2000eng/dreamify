@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using dreamify.Domain.Requests;
 using dreamify.Domain.Response;
-using Microsoft.AspNetCore.Http;
 
 namespace dreamify.Application.Abstracts;
 
