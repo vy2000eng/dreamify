@@ -11,7 +11,7 @@ public class UserInfoResponse
     [JsonPropertyName("UserName")]
     public string UserName     {get;set;} = string.Empty;
     
-    [JsonPropertyName("createdOn ")]
+    [JsonPropertyName("createdOn")]
     public DateTime CreatedOn  {get;set;}
     
     [JsonPropertyName("isSubscribed")]
