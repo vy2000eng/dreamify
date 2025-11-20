@@ -11,8 +11,8 @@ public class User:IdentityUser<Guid>
     public DateTime CreatedOn { get; set; }
 
     public Boolean IsSubscribed { get; set; }
-    public Boolean DoesHaveRecordings { get; set; }
-    public Boolean AreRecordsDownloadedToClients { get; set; }
+    // public Boolean DoesHaveRecordings { get; set; }
+    // public Boolean AreRecordsDownloadedToClients { get; set; }
     
     
 
@@ -24,8 +24,8 @@ public class User:IdentityUser<Guid>
             UserName                      = email,
             CreatedOn                     = DateTime.UtcNow,
             IsSubscribed                  = false,
-            DoesHaveRecordings            = false,
-            AreRecordsDownloadedToClients = false,
+            // DoesHaveRecordings            = false,
+            // AreRecordsDownloadedToClients = false,
             
         };
     }

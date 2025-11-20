@@ -137,7 +137,8 @@ public class AccountService:IAccountService
     
         if (string.IsNullOrEmpty(userId))
         {
-            return null;
+            //return null;
+            throw new UserRetrievalFailure();
         }
     
         // Fetch the full user from your database
@@ -145,7 +146,9 @@ public class AccountService:IAccountService
     
         if (user == null)
         {
+            //TODO:add an actual err
             return null;
+            
         }
     
         // Create response object
@@ -158,4 +161,49 @@ public class AccountService:IAccountService
         };
 
     }
+
+
+    public async Task UpdateUserInfoAsync(InfoRequest infoRequest, ClaimsPrincipal claimsPrincipal)
+    {
+        var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                     ?? claimsPrincipal.FindFirst("sub")?.Value;
+        
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new UserRetrievalFailure();
+        }
+    
+        // Fetch the full user from your database
+        var user = await _userManager.FindByIdAsync(userId);
+        
+
+        //update username 
+        if (!string.IsNullOrWhiteSpace(infoRequest.NewUserName) && user.UserName != infoRequest.NewUserName)
+        {
+            var usernameResult = await _userManager.SetUserNameAsync(user, infoRequest.NewUserName);
+            
+            if (!usernameResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Failed to update username: {string.Join(", ", usernameResult.Errors.Select(e => e.Description))}");
+            }
+        }
+        
+        // Update password if provided
+        if (!string.IsNullOrWhiteSpace(infoRequest.NewPassword))
+        {
+            // You'd need to add OldPassword to InfoRequest for this approach
+            var passwordResult = await _userManager.ChangePasswordAsync(user, infoRequest.OldPassword, infoRequest.NewPassword);
+    
+            if (!passwordResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Failed to update password: {string.Join(", ", passwordResult.Errors.Select(e => e.Description))}");
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    
 }

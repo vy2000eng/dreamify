@@ -24,6 +24,7 @@ public class AccountController:ControllerBase
     [HttpPost("register")]
     public async Task<IResult> Register(RegisterRequest request)
     {
+        //TODO: add try catches
         var registerResponse = await _accountService.RegisterUserAsync(request);
 
         return Results.Ok(registerResponse);
@@ -31,6 +32,8 @@ public class AccountController:ControllerBase
     [HttpPost("login")]
     public async Task<IResult> LoginRequest(LoginRequest request)
     {
+        //TODO: add try catches
+
         var loginResponse = await _accountService.LoginUserAsync(request);
 
         return Results.Ok(loginResponse);
@@ -38,6 +41,8 @@ public class AccountController:ControllerBase
     [HttpPost("refresh")]
     public async Task<IResult> RefreshRequest(RefreshRequest request)
     {
+        //TODO: add try catches
+
         var refreshResponse = await _accountService.RefreshTokenAsync(request);
 
         return Results.Ok(refreshResponse);
@@ -47,10 +52,31 @@ public class AccountController:ControllerBase
     [HttpGet("userInfo")]
     public async Task<IResult> GetUserInfo()
     {
-        
-        var refreshResponse = await _accountService.GetUserInfoAsync(User);
+        //TODO: add try catches
 
-        return Results.Ok(refreshResponse);
+        
+        var userInfo = await _accountService.GetUserInfoAsync(User);
+
+        return Results.Ok(userInfo);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("UpdateUserInfo")]
+    public async Task<IResult> UpdateUserInfo(InfoRequest request)
+    {
+        //TODO: add try catches
+        try
+        {
+            await _accountService.UpdateUserInfoAsync(request, User);
+            return Results.NoContent();
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
+        
+        
+        
     }
     
     

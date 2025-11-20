@@ -10,6 +10,7 @@ public interface IAccountService
     Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest);
     Task<LoginResponse> RefreshTokenAsync(RefreshRequest refreshRequest);
     Task<UserInfoResponse> GetUserInfoAsync(ClaimsPrincipal user);
+    Task UpdateUserInfoAsync(InfoRequest infoRequest, ClaimsPrincipal claimsPrincipal);
 
 
 }
