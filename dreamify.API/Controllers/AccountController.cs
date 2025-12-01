@@ -25,46 +25,80 @@ public class AccountController:ControllerBase
     public async Task<IResult> Register(RegisterRequest request)
     {
         //TODO: add try catches
-        var registerResponse = await _accountService.RegisterUserAsync(request);
+        try
+        {
+            var registerResponse = await _accountService.RegisterUserAsync(request);
 
-        return Results.Ok(registerResponse);
+            return Results.Ok(registerResponse);
+
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex);
+
+            
+            
+        }
+      
     }
     [HttpPost("login")]
     public async Task<IResult> LoginRequest(LoginRequest request)
     {
         //TODO: add try catches
 
-        var loginResponse = await _accountService.LoginUserAsync(request);
+        try
+        {
+            var loginResponse = await _accountService.LoginUserAsync(request);
 
-        return Results.Ok(loginResponse);
+            return Results.Ok(loginResponse);
+
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex);
+            
+        }
+
+        
     }
     [HttpPost("refresh")]
     public async Task<IResult> RefreshRequest(RefreshRequest request)
     {
         //TODO: add try catches
+        try
+        {
+            var refreshResponse = await _accountService.RefreshTokenAsync(request);
 
-        var refreshResponse = await _accountService.RefreshTokenAsync(request);
+            return Results.Ok(refreshResponse);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex);
+            
+        }
 
-        return Results.Ok(refreshResponse);
+       
     }
     
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("userInfo")]
     public async Task<IResult> GetUserInfo()
     {
-        //TODO: add try catches
-
-        
-        var userInfo = await _accountService.GetUserInfoAsync(User);
-
-        return Results.Ok(userInfo);
+        try
+        {
+            var userInfo = await _accountService.GetUserInfoAsync(User);
+            return Results.Ok(userInfo);
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("UpdateUserInfo")]
     public async Task<IResult> UpdateUserInfo(InfoRequest request)
     {
-        //TODO: add try catches
         try
         {
             await _accountService.UpdateUserInfoAsync(request, User);
@@ -74,9 +108,22 @@ public class AccountController:ControllerBase
         {
             return Results.BadRequest(ex.Message);
         }
-        
-        
-        
+    }
+    
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("DeleteUser")]
+    public async Task<IResult> DeleteUserAccount()
+    {
+        try
+        {
+            await _accountService.DeleteUserInfoAsync(User);
+            return Results.NoContent();
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(ex.Message);
+        }
     }
     
     

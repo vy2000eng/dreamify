@@ -11,6 +11,9 @@ public interface IAccountService
     Task<LoginResponse> RefreshTokenAsync(RefreshRequest refreshRequest);
     Task<UserInfoResponse> GetUserInfoAsync(ClaimsPrincipal user);
     Task UpdateUserInfoAsync(InfoRequest infoRequest, ClaimsPrincipal claimsPrincipal);
+    
+    
+    Task DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal);
 
 
 }

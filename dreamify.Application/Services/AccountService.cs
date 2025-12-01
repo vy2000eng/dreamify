@@ -201,9 +201,28 @@ public class AccountService:IAccountService
         }
         
     }
-    
-    
-    
-    
-    
+
+    public async Task DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal)
+    {
+          var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                         ?? claimsPrincipal.FindFirst("sub")?.Value;
+        
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UserRetrievalFailure();
+            }
+        
+            var user = await _userManager.FindByIdAsync(userId);
+            
+            if (user == null)
+            {
+                throw new UserRetrievalFailure();            
+            }
+        
+            var res = await _userManager.DeleteAsync(user);
+            if (!res.Succeeded)
+            {
+                throw new UserDeletionException();
+            }
+    }
 }
