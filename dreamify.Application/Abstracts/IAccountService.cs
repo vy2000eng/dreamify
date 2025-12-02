@@ -13,7 +13,7 @@ public interface IAccountService
     Task UpdateUserInfoAsync(InfoRequest infoRequest, ClaimsPrincipal claimsPrincipal);
     
     
-    Task DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal);
+    Task <DeleteUserResponse>DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal);
 
 
 }

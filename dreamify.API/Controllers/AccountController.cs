@@ -2,6 +2,7 @@ using System.Security.Claims;
 using dreamify.Application.Abstracts;
 using dreamify.Domain.Entities;
 using dreamify.Domain.Requests;
+using dreamify.Domain.Response;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -102,7 +103,7 @@ public class AccountController:ControllerBase
         try
         {
             await _accountService.UpdateUserInfoAsync(request, User);
-            return Results.NoContent();
+            return Results.Ok();
         }
         catch (Exception ex)
         {
@@ -117,12 +118,16 @@ public class AccountController:ControllerBase
     {
         try
         {
-            await _accountService.DeleteUserInfoAsync(User);
-            return Results.NoContent();
+            var response = await _accountService.DeleteUserInfoAsync(User);
+            return Results.Ok(response);
         }
         catch (Exception ex)
         {
-            return Results.BadRequest(ex.Message);
+            var response = new DeleteUserResponse()
+            {
+                ResultMessage = ex.Message
+            };
+            return Results.BadRequest(response);
         }
     }
     

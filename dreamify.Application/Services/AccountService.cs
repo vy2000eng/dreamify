@@ -202,7 +202,7 @@ public class AccountService:IAccountService
         
     }
 
-    public async Task DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal)
+    public async Task<DeleteUserResponse> DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal)
     {
           var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value 
                          ?? claimsPrincipal.FindFirst("sub")?.Value;
@@ -224,5 +224,10 @@ public class AccountService:IAccountService
             {
                 throw new UserDeletionException();
             }
+            return new DeleteUserResponse()
+            {
+                ResultMessage = "Success"
+            };
+        
     }
 }
