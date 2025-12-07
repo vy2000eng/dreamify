@@ -4,12 +4,15 @@ using dreamify.Domain.Entities;
 using dreamify.Domain.Exceptions;
 using dreamify.Domain.Requests;
 using dreamify.Domain.Response;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace dreamify.Application.Services;
 
 public class AccountService:IAccountService
 {
+    private readonly IGoogleTokenProcessor _googleTokenProcessor;
     private readonly IAuthTokenProcessor _authTokenProcessor;
     private readonly UserManager<User> _userManager;
     private readonly IUserRepository _userRepository;
@@ -229,5 +232,65 @@ public class AccountService:IAccountService
                 ResultMessage = "Success"
             };
         
+    }
+
+
+
+    public async Task<LoginResponse> LoginWithGoogle( GoogleLoginRequest request)
+    {
+        try
+        {
+            // 1. Verify the Google ID token
+            var payload = await _googleTokenProcessor.ValidateGoogleIdToken(request.IdToken);
+        
+            // 2. Extract user info from the verified token
+            var email = payload.Email;
+            var googleId = payload.Subject;
+            var name = payload.Name;
+        
+            // 3. Check if user exists in your database
+            var user = await _userManager.FindByEmailAsync(email);
+        
+            if (user == null)
+            {
+                // 4. Create new user if doesn't exist
+                user = User.Create(email);
+                user.UserName = name; // Set username from Google
+                // You might want to add a GoogleId property to your User entity
+            
+                var result = await _userManager.CreateAsync(user);
+            
+                if (!result.Succeeded)
+                {
+                    throw new RegistrationFailedException(result.Errors.Select(e => e.Description));
+                }
+            }
+        
+            // 5. Generate YOUR access and refresh tokens
+            var (jwtToken, expirationDateInUtc) = _authTokenProcessor.GenerateJwtToken(user);
+            var refreshTokenValue = _authTokenProcessor.GenerateRefreshToken();
+            var refreshTokenExpirationDateInUtc = DateTime.UtcNow.AddDays(7);
+        
+            // 6. Save refresh token to database
+            user.RefreshToken = refreshTokenValue;
+            user.RefreshTokenExpiry = refreshTokenExpirationDateInUtc;
+            await _userManager.UpdateAsync(user);
+        
+            var expiresInSeconds = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
+            var expiresIn = expiresInSeconds / 60;
+        
+            // 7. Return YOUR tokens
+            return new LoginResponse
+            {
+                AccessToken = jwtToken,
+                ExpiresIn = expiresIn,
+                RefreshToken = refreshTokenValue
+            };
+        }
+        catch (InvalidJwtException)
+        {
+            throw new UnauthorizedAccessException("Invalid Google token");
+        }
+
     }
 }

@@ -9,4 +9,10 @@ public class JwtOptions
     public string Audience             { get; set; }
     public int ExpirationTimeInMinutes { get; set; }
     
+    public string GoogleAudience  { get; set; }
+    
+    public string GoogleIssuer      { get; set; }
+    
+    
+    
 }

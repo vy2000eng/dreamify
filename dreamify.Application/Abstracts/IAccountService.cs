@@ -14,6 +14,7 @@ public interface IAccountService
     
     
     Task <DeleteUserResponse>DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal);
+    Task<LoginResponse> LoginWithGoogle(GoogleLoginRequest request);
 
 
 }

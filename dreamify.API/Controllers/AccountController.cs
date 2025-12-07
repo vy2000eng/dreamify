@@ -130,6 +130,25 @@ public class AccountController:ControllerBase
             return Results.BadRequest(response);
         }
     }
+
+
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("SignInWithGoogle")]
+    public async Task<IResult> LoginWithGoogle(GoogleLoginRequest request)
+    {
+        try
+        {
+            var response = await _accountService.LoginWithGoogle(request);
+            return Results.Ok(response);
+
+
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(new { error = ex.Message });
+        }
+        
+    }
     
     
     
