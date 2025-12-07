@@ -17,11 +17,12 @@ public class AccountService:IAccountService
     private readonly UserManager<User> _userManager;
     private readonly IUserRepository _userRepository;
 
-    public AccountService(IAuthTokenProcessor authTokenProcessor, UserManager<User> userManager,IUserRepository userRepository)
+    public AccountService(IAuthTokenProcessor authTokenProcessor, UserManager<User> userManager,IUserRepository userRepository, IGoogleTokenProcessor googleTokenProcessor)
     {
         _authTokenProcessor = authTokenProcessor;
         _userManager = userManager;
         _userRepository = userRepository;
+        _googleTokenProcessor = googleTokenProcessor;
     }
 
 

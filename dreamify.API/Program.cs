@@ -37,7 +37,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
     opt.Password.RequiredLength = 8;
     opt.User.RequireUniqueEmail = true;
     opt.User.AllowedUserNameCharacters = 
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
 
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -51,6 +51,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IOpenAiRequestProcessor, OpenAiRequestProcessor>();
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
+builder.Services.AddScoped<IGoogleTokenProcessor, GoogleTokenProcessor>();
 
 
 builder.Services.AddAuthentication(opt =>
@@ -78,7 +79,7 @@ builder.Services.AddAuthentication(opt =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.Secret))
         
     };
-    Console.WriteLine($"Validation - Secret first 10 chars: {jwtOption.Secret.Substring(0, 10)}");
+    //Console.WriteLine($"Validation - Secret first 10 chars: {jwtOption.Secret.Substring(0, 10)}");
     Console.WriteLine($"Validation - Issuer: {jwtOption.Issuer}");
     Console.WriteLine($"Validation - Audience: {jwtOption.Audience}");
     
