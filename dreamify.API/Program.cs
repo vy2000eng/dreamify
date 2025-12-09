@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+
 using dreamify.API.Controllers;
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
@@ -36,7 +38,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
     opt.Password.RequireUppercase = true;
     opt.Password.RequiredLength = 8;
     opt.User.RequireUniqueEmail = true;
-    opt.User.AllowedUserNameCharacters = 
+    opt.User.AllowedUserNameCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
 
 }).AddEntityFrameworkStores<ApplicationDbContext>();
@@ -139,6 +141,8 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
+ //builder.Services.AddSu//AddSignInManager<SignInManager<User>>();
+
 
 var app = builder.Build();
 

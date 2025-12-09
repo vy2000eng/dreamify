@@ -154,8 +154,9 @@ namespace dreamify.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<bool>("AreRecordsDownloadedToClients")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("AuthProvider")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -164,16 +165,15 @@ namespace dreamify.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("DoesHaveRecordings")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsSubscribed")
                         .HasColumnType("tinyint(1)");
@@ -214,7 +214,6 @@ namespace dreamify.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 

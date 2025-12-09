@@ -38,8 +38,9 @@ public class GoogleTokenProcessor:IGoogleTokenProcessor
         }
         catch (InvalidJwtException ex)
         {
-            
-            throw  new InvalidJwtException(ex.Message);
+            throw new CustomInvalidJwtException(ex.Message);
+
+            //throw  new InvalidJwtException(ex.Message);
             // Handle invalid token (e.g., expired, invalid signature, incorrect audience)
             // Log the exception or return null/throw a specific exception
         }

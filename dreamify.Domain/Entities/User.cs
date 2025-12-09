@@ -11,22 +11,23 @@ public class User:IdentityUser<Guid>
     public DateTime CreatedOn { get; set; }
 
     public Boolean IsSubscribed { get; set; }
-    // public Boolean DoesHaveRecordings { get; set; }
+    
+    public string? GoogleId { get; set; } // Store the subject here
+    public string AuthProvider { get; set; } = "Local";
+// public Boolean DoesHaveRecordings { get; set; }
     // public Boolean AreRecordsDownloadedToClients { get; set; }
     
     
 
-    public static User Create(string email,string? refreshToken = null)
+    public static User Create(string email, string? refreshToken = null, string authProvider = "Local")
     {
         return new User
         {
-            Email                         = email,
-            UserName                      = email,
-            CreatedOn                     = DateTime.UtcNow,
-            IsSubscribed                  = false,
-            // DoesHaveRecordings            = false,
-            // AreRecordsDownloadedToClients = false,
-            
+            Email        = email,
+            UserName     = email,
+            CreatedOn    = DateTime.UtcNow,
+            IsSubscribed = false,
+            AuthProvider = authProvider  // Add this
         };
     }
 
