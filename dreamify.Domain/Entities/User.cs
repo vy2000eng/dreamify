@@ -14,6 +14,8 @@ public class User:IdentityUser<Guid>
     
     public string? GoogleId { get; set; } // Store the subject here
     public string AuthProvider { get; set; } = "Local";
+    public string? EmailVerificationCode { get; set; }
+    public DateTime? EmailVerificationCodeExpiry { get; set; }
 // public Boolean DoesHaveRecordings { get; set; }
     // public Boolean AreRecordsDownloadedToClients { get; set; }
     

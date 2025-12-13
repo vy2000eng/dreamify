@@ -15,5 +15,7 @@ public interface IAccountService
     
     Task <DeleteUserResponse>DeleteUserInfoAsync(ClaimsPrincipal claimsPrincipal);
     Task<LoginResponse> LoginWithGoogle(GoogleLoginRequest request);
+    
+    Task<GenericSuccessFailureResponse> VerifyUserAccountViaTokenValueSentToUserEmail(ClaimsPrincipal claimsPrincipal, VerificationRequest request);
 
 }

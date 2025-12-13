@@ -28,6 +28,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.Configure<JwtOptions> (builder.Configuration.GetSection(JwtOptions.JwtOptionsKey));
 builder.Services.Configure<OpenAiOptions> (builder.Configuration.GetSection(OpenAiOptions.OpenApiOptionsKey));
+builder.Services.Configure<MailOptions> (builder.Configuration.GetSection(MailOptions.MailOptionsKey));
 
 
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
@@ -41,7 +42,8 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
     opt.User.AllowedUserNameCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
 
-}).AddEntityFrameworkStores<ApplicationDbContext>();
+}).AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
@@ -54,7 +56,8 @@ builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IOpenAiRequestProcessor, OpenAiRequestProcessor>();
 builder.Services.AddScoped<IOpenAiService, OpenAiService>();
 builder.Services.AddScoped<IGoogleTokenProcessor, GoogleTokenProcessor>();
-
+builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+builder.Services.AddScoped<IEmailServiceProcessors, EmailServiceProcessors>();
 
 builder.Services.AddAuthentication(opt =>
     {

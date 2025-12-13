@@ -15,6 +15,7 @@ namespace dreamify.API.Controllers;
 public class AccountController:ControllerBase
 {
     private readonly IAccountService _accountService;
+    
 
 
     public AccountController(IAccountService accountService)
@@ -110,7 +111,33 @@ public class AccountController:ControllerBase
             return Results.BadRequest(ex.Message);
         }
     }
-    
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+    [HttpPost("VerifyUserAccount")]
+    public async Task<IResult> VerifyUserEmail(VerificationRequest request)
+    {
+        try
+        {
+            var response = await _accountService.VerifyUserAccountViaTokenValueSentToUserEmail(User ,request);
+            return Results.Ok(response);
+
+        }
+        catch (Exception ex)
+        {
+            
+            var Response = new GenericSuccessFailureResponse
+            {
+                ResultMessage = ex.Message//"Failure to verify user account.",
+            };
+            
+            return Results.BadRequest(Response);
+
+            
+        }
+        
+        
+    }
     
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("DeleteUser")]

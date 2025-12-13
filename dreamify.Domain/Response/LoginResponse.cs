@@ -13,4 +13,8 @@ public class LoginResponse
     
     [JsonPropertyName("refreshToken")]
     public string RefreshToken { get; set; } = string.Empty;
+    
+    [JsonPropertyName("isFirstLogin")]
+    
+    public bool? IsFirstLogin { get; set; }
 }

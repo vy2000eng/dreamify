@@ -172,6 +172,12 @@ namespace dreamify.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("EmailVerificationCode")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EmailVerificationCodeExpiry")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("GoogleId")
                         .HasColumnType("longtext");
 

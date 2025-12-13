@@ -16,14 +16,16 @@ public class AccountService : IAccountService
     private readonly IAuthTokenProcessor _authTokenProcessor;
     private readonly UserManager<User> _userManager;
     private readonly IUserRepository _userRepository;
+    private readonly IEmailSenderService _emailSender;
 
     public AccountService(IAuthTokenProcessor authTokenProcessor, UserManager<User> userManager,
-        IUserRepository userRepository, IGoogleTokenProcessor googleTokenProcessor)
+        IUserRepository userRepository, IGoogleTokenProcessor googleTokenProcessor, IEmailSenderService emailSender)
     {
         _authTokenProcessor = authTokenProcessor;
         _userManager = userManager;
         _userRepository = userRepository;
         _googleTokenProcessor = googleTokenProcessor;
+        _emailSender = emailSender;
 
     }
 
@@ -57,12 +59,14 @@ public class AccountService : IAccountService
     
         var expiresInSeconds = Math.Max(0, (int)(expirationDateInUtc - DateTime.UtcNow).TotalSeconds);
         var expiresIn = expiresInSeconds / 60;
+        await _emailSender.SendWelcomeEmail(user);
 
         return new LoginResponse
         {
             AccessToken = jwtToken,
             ExpiresIn = expiresIn,
-            RefreshToken = refreshTokenValue
+            RefreshToken = refreshTokenValue,
+            IsFirstLogin = true
         };
     }
 
@@ -96,7 +100,9 @@ public class AccountService : IAccountService
         {
             AccessToken = jwtToken,
             ExpiresIn = expiresIn,
-            RefreshToken = refreshTokenValue
+            RefreshToken = refreshTokenValue,
+            IsFirstLogin = false
+            
         };
     }
 
@@ -133,7 +139,8 @@ public class AccountService : IAccountService
         {
             AccessToken = jwtToken,
             ExpiresIn = expiresIn,
-            RefreshToken = refreshTokenValue
+            RefreshToken = refreshTokenValue,
+            
         };
 
 
@@ -251,6 +258,8 @@ public class AccountService : IAccountService
 
     public async Task<LoginResponse> LoginWithGoogle(GoogleLoginRequest request)
     {
+        bool isNewUser = false;
+        
         try
         {
             // 1. Verify the Google ID token
@@ -275,6 +284,7 @@ public class AccountService : IAccountService
                 // 4. Create new Google user
                 user = User.Create(email, authProvider: "Google");
                 user.GoogleId = googleId;
+                isNewUser = true;
 
                 var result = await _userManager.CreateAsync(user);
 
@@ -282,6 +292,8 @@ public class AccountService : IAccountService
                 {
                     throw new RegistrationFailedException(result.Errors.Select(e => e.Description));
                 }
+
+                await _emailSender.SendWelcomeEmail(user);
             }
 
             // 5. Generate YOUR access and refresh tokens
@@ -302,13 +314,47 @@ public class AccountService : IAccountService
             {
                 AccessToken = jwtToken,
                 ExpiresIn = expiresIn,
-                RefreshToken = refreshTokenValue
+                RefreshToken = refreshTokenValue,
+                IsFirstLogin = isNewUser,
             };
         }
         catch (InvalidJwtException)
         {
             throw new UnauthorizedAccessException("Invalid Google token");
         }
+    }
+
+    public async Task<GenericSuccessFailureResponse> VerifyUserAccountViaTokenValueSentToUserEmail(ClaimsPrincipal claimsPrincipal,VerificationRequest request)
+    {
+        
+             var userId =claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                     ?? claimsPrincipal.FindFirst("sub")?.Value;
+             var user = await _userManager.FindByIdAsync(userId);
+            // var user =  await _userManager.FindByIdAsync(userId);
+            if (user == null) {
+                throw new UserRetrievalFailure();
+                
+            }
+            
+            if (user.EmailVerificationCode != request.VerificationRequestCode || DateTime.UtcNow  > user.EmailVerificationCodeExpiry)
+            {
+                throw new UserVerificationCodeIsExpiredOrDoesNotMatch();
+
+
+            }
+            user.EmailConfirmed = true;
+            await _userManager.UpdateAsync(user);
+                   
+            return new GenericSuccessFailureResponse
+            {
+                ResultMessage = "Success"
+            };
+
+
+            
+
+            
+     
     }
 
 
